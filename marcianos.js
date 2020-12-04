@@ -10,7 +10,11 @@ var mouseClick = false;
 var nave2;
 var disparos_cuenta = 0;
 var disparos = [];
-var estado = 0; // 0 = en juego, 1 = ganado, 2 = perdido
+var terminado = false;
+var multiplicadorX, multiplicadorY;
+var tiempo = 90;
+var puntos = 0;
+var tiempoVictoria = 0;
 
 
 //Trackear el mouse
@@ -194,24 +198,25 @@ window.onload = function(){
     //Cargar marcianos
     marcianoa = [];
     for(var f = 0; f<10; f++){
-        marcianoa.push(new marciano(20, "orange", 500 + f*100, 100, 1, 2, 5));
+        marcianoa.push(new marciano(20, "orange", 500 + f*100, 100, 1, 2, 10));
     }
     for(var f = 0; f<10; f++){
-        marcianoa.push(new marciano(20, "red", 500 + f*100, 200, 1, 2, 5));
+        marcianoa.push(new marciano(20, "red", 500 + f*100, 200, 1, 2, 10));
     }
     for(var f = 0; f<10; f++){
-        marcianoa.push(new marciano(20, "purple", 500 + f*100, 300, 1, 2, 5));
+        marcianoa.push(new marciano(20, "purple", 500 + f*100, 300, 1, 2, 10));
     }
     for(var f = 0; f<10; f++){
-        marcianoa.push(new marciano(20, "blue", 500 + f*100, 400, 1, 2, 5));
+        marcianoa.push(new marciano(20, "blue", 500 + f*100, 400, 1, 2, 10));
     }
     for(var f = 0; f<10; f++){
-        marcianoa.push(new marciano(20, "cyan", 500 + f*100, 500, 1, 2, 5));
+        marcianoa.push(new marciano(20, "cyan", 500 + f*100, 500, 1, 2, 10));
     }
     setInterval(animarMarcianos, 30);
-    setInterval(animarDisparo, 30);
+    setInterval(animarDisparo, 15);
     setInterval(cambiarDireccion, 3000);
-    setInterval(funcionBajar, 600);
+    setInterval(funcionBajar, 3000);
+    setInterval(contador, 1000);
     
 }
 
@@ -266,6 +271,10 @@ function funcionBajar(){
     }
 }
 
+function bajar(){
+    tiempoR =-1
+}
+
 
 
 //Disparo Nave
@@ -280,6 +289,8 @@ function matardisparo(i) {
 function matarmarciano(i) {
     marcianoa[i].matar();
     //delete(marcianoa.pop(i));
+    puntos++;
+    document.getElementById("marcador").innerHTML=("Puntuacion actual: " + puntos);
 }
 
 
@@ -313,12 +324,23 @@ function disparar(e) {
     }
 }
 
+function contador() {
+    if(tiempo > 0){
+    tiempo --;
+    }
+    if(puntos < 50){
+        document.getElementById("temporizador").innerHTML=("Tiempo restante : " + tiempo);
+    } else {
+        document.getElementById("temporizador").innerHTML=(" ");
+    }
+    if(tiempo == 0 && puntos < 50){
+        document.getElementById("marcador").innerHTML=("Se ha agotado el tiempo, puntuacion total: " + puntos + " Pulsa F5 para jugar otra vez");
+        terminado = true;
+        Object.freeze(bob);}
+        else if (puntos == 50){
+            tiempoVictoria = tiempo;
+            document.getElementById("marcador").innerHTML=("Felicidades, has ganado y te han sobrado : " + tiempoVictoria + " Segundos extra, Pulsa F5 para jugar otra vez");
+            puntos ++;
+        }
+    }
 
-//control de victoria
-if(estado == 1){
-    alert("Has ganado")
-} else if (estado == 2){
-    alert("Has perdido")
-} else {
-
-}
